@@ -4,6 +4,8 @@ import numpy as np
 import spatialgeometry as sg
 from spatialmath import SE3, SO3
 
+print(rtb.__file__)
+
 
 # Instantiate the graphical environment (Swift)
 env = Swift()

@@ -52,7 +52,7 @@ class Point_cloud_Manipulability:
         points_array = np.asarray(self.point_cloud.points)
 
         # Scale the point cloud along the x-axis
-        points_array[:, 0] *= scale_factor
+        # points_array[:, 0] *= scale_factor
 
         # Update point cloud with scaled points
         self.point_cloud.points = o3d.utility.Vector3dVector(points_array)

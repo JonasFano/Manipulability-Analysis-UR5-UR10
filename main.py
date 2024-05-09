@@ -24,12 +24,12 @@ env = Swift()
 env.launch()
 
 # Instantiate a UR5 robot
-robot = rtb.models.URDF.UR5()
-# robot = rtb.models.URDF.UR10()
+# robot = rtb.models.URDF.UR5()
+robot = rtb.models.URDF.UR10()
 
 input("Press enter to start robot manipulability check")
 
-for y in np.arange(0.5, 0.7, 0.1):
+for y in np.arange(0.8, 1, 0.1):
     for x in np.arange(-0.2, 0.3, 0.1):
         # Create an empty list to store manipulability values
         manipulability_values = []
@@ -38,18 +38,18 @@ for y in np.arange(0.5, 0.7, 0.1):
         T_base_belly = SE3(x, y, 0)
         print(T_base_belly)
 
-        belly = sg.Mesh(filename="belly.stl", scale=[0.6666, 1.0, 1.0], base=T_base_belly, collision=True)
+        belly = sg.Mesh(filename="Belly_new.stl", scale=[1, 1.0, 1.0], base=T_base_belly, collision=True)
 
         env.add(robot)
         T_base_tcp = home_pos(robot)
         env.add(belly)
 
         point_cloud = Point_cloud_Manipulability()
-        point_cloud.load_from_object_file(stl_file_name="belly.stl", obj_translate=[x, y, 0.0], scale_factor=0.6666, num_points=500)
+        point_cloud.load_from_object_file(stl_file_name="Belly_new.stl", obj_translate=[x, y, 0.0], scale_factor=1, num_points=500)
         point_cloud.sample_points_above_z(z_threshold=0.1)
 
-        points = np.asarray(point_cloud.filtered_point_cloud.points)[:10]
-        normals = np.asarray(point_cloud.filtered_point_cloud.normals)[:10]
+        points = np.asarray(point_cloud.filtered_point_cloud.points)[:]
+        normals = np.asarray(point_cloud.filtered_point_cloud.normals)[:]
 
         for i in range(len(points)):
             print("Position: ", points[i])
@@ -71,10 +71,15 @@ for y in np.arange(0.5, 0.7, 0.1):
             # T_point_tcp = SE3.Rt(T_base_tcp.R, [x, y, 0.31])# + 0.15175])
             T_point_tcp = SE3.Rt(rotation_matrix, np.array(points[i]))
             print(T_point_tcp)
+            translation = SE3.Tz(z=-0.15) 
+            T_point_tcp = T_point_tcp * translation
+            print(T_point_tcp)
+
 
             # Inverse Kinematics on robot
-            q, success, iter, searches, residual = robot.ik_LM(T_point_tcp, q0=robot.q, end='tool0')
+            q, success, iter, searches, residual = robot.ik_LM(T_point_tcp, q0=np.deg2rad([-60, -80, -100, -90, 90, 0]), end='tool0')
             robot.q = q
+            print(robot.fkine(q))
 
             env.step()
 
@@ -96,4 +101,3 @@ for y in np.arange(0.5, 0.7, 0.1):
         # Save the NumPy array to a file
         np.savetxt("manipulability_values_" + str(x) + "_" + str(y) + ".txt", np.array(manipulability_values))
         env.reset()
-
