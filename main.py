@@ -64,7 +64,7 @@ for y in np.arange(0.8, 1, 0.1):
             z_axis = np.array([0, 0, 1])  # Initial z-axis of the tool frame
             rotation_axis = np.cross(z_axis, normal)
             rotation_angle = np.arccos(np.dot(z_axis, normal))
-            rotation_matrix = SO3.Exp(rotation_angle * rotation_axis).A
+            rotation_matrix = SO3.AngleAxis(rotation_angle, rotation_axis).A
             
             # Recreate the TCP transformation matrix with the adjusted rotation
             # T_point_tcp = SE3.Rt(T_base_tcp.R, np.array(points[i]))
