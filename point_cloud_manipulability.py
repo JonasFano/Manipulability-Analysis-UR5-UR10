@@ -51,7 +51,7 @@ class Point_cloud_Manipulability:
         # Convert points to NumPy array for scaling
         points_array = np.asarray(self.point_cloud.points)
 
-        # Scale the point cloud along the y-axis
+        # Scale the point cloud along the x-axis
         points_array[:, 0] *= scale_factor
 
         # Update point cloud with scaled points
@@ -90,7 +90,6 @@ class Point_cloud_Manipulability:
         self.filtered_point_cloud.normals = o3d.utility.Vector3dVector(filtered_normals)
 
 
-
     def visu_point_cloud(self):
         #################
         # Visualization #
@@ -102,12 +101,39 @@ class Point_cloud_Manipulability:
         o3d.visualization.draw_geometries([self.point_cloud, axes])
 
 
+    def visu_point_cloud_and_normal(self):
+        #################
+        # Visualization #
+        #################
+        # Create axes
+        axes = o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.1, origin=[0, 0, 0])
+
+        # Create a LineSet to visualize normals
+        lines = []
+        for i in range(len(self.point_cloud.points)):
+            start_point = self.point_cloud.points[i]
+            end_point = start_point + 0.1 * self.point_cloud.normals[i]  # Adjust the length of the normal line as needed
+            lines.append([start_point, end_point])
+
+        # Flatten the list of lines
+        flattened_lines = [point for sublist in lines for point in sublist]
+
+        # Create a LineSet
+        line_set = o3d.geometry.LineSet()
+        line_set.points = o3d.utility.Vector3dVector(flattened_lines)
+        line_set.lines = o3d.utility.Vector2iVector(np.arange(len(flattened_lines)).reshape(-1, 2))
+
+        # Visualize the point cloud, axes, and point of interest sphere
+        o3d.visualization.draw_geometries([self.point_cloud, axes, line_set])
+
+
+
 if __name__ == "__main__":
     point_cloud = Point_cloud_Manipulability()
 
-    point_cloud.load_from_object_file(stl_file_name="Belly_old.stl", obj_translate=[0.5, 0.5, 0.0], scale_factor=0.6666, num_points=200)
+    point_cloud.load_from_object_file(stl_file_name="belly.stl", obj_translate=[-0.3, 0.5, 0.0], scale_factor=0.6666, num_points=200)
 
     # Sample points where z-coordinate is above 0
-    point_cloud.sample_points_above_z(z_threshold=0.001)
+    point_cloud.sample_points_above_z(z_threshold=0.15)
 
-    point_cloud.visu_point_cloud()
+    point_cloud.visu_point_cloud_and_normal()
