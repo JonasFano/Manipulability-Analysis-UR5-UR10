@@ -26,6 +26,8 @@ env.launch()
 # Instantiate a UR5 robot
 # robot = rtb.models.URDF.UR5()
 robot = rtb.models.URDF.UR10()
+T_robot = SE3.Tz(0.3)
+robot.base = T_robot * robot.base # Transform robot base position
 
 input("Press enter to start robot manipulability check")
 
@@ -70,11 +72,14 @@ for y in np.arange(0.8, 1, 0.1):
             # T_point_tcp = SE3.Rt(T_base_tcp.R, np.array(points[i]))
             # T_point_tcp = SE3.Rt(T_base_tcp.R, [x, y, 0.31])# + 0.15175])
             T_point_tcp = SE3.Rt(rotation_matrix, np.array(points[i]))
+
             print(T_point_tcp)
-            translation = SE3.Tz(z=-0.15) 
+            translation = SE3.Tz(-0.15) 
             T_point_tcp = T_point_tcp * translation
             print(T_point_tcp)
 
+            T_point_tcp = SE3.Tz(-0.3) * T_point_tcp # To account for a different robot base position
+            print(T_point_tcp)
 
             # Inverse Kinematics on robot
             q, success, iter, searches, residual = robot.ik_LM(T_point_tcp, q0=np.deg2rad([-60, -80, -100, -90, 90, 0]), end='tool0')
