@@ -5,7 +5,7 @@ import spatialgeometry as sg
 from spatialmath import SE3, SO3
 from point_cloud_manipulability import Point_cloud_Manipulability
 from swift import Swift
-
+from tqdm import tqdm
 
 def home_pos(robot):
     # Move to some initial joint position
@@ -33,13 +33,13 @@ robot.base = T_robot * robot.base # Transform robot base position
 # input("Press enter to start robot manipulability check")
 
 
-for z in np.arange(0.0, 0.6, 0.1):
+for z in tqdm(np.arange(0.0, 0.5, 0.1), desc="Z Loop", leave = False):
     robot = rtb.models.URDF.UR10()
     T_robot = SE3.Tz(z)
     robot.base = T_robot * robot.base # Transform robot base position
 
-    for y in np.arange(0.8, 1, 0.1):
-        for x in np.arange(-0.2, 0.3, 0.1):
+    for y in tqdm(np.arange(0.5, 0.8, 0.1), desc="Y Loop", leave = False):
+        for x in tqdm(np.arange(-0.2, 0.3, 0.1), desc="X Loop", leave = False):
             # Create an empty list to store manipulability values
             manipulability_values = []
             success_list = []
@@ -56,7 +56,7 @@ for z in np.arange(0.0, 0.6, 0.1):
             # env.add(belly)
 
             point_cloud = Point_cloud_Manipulability()
-            point_cloud.load_from_object_file(stl_file_name="Belly_new.stl", obj_translate=[x, y, 0.0], scale_factor=1, num_points=2000)
+            point_cloud.load_from_object_file(stl_file_name="Belly_new.stl", obj_translate=[x, y, 0.0], scale_factor=1, num_points=3500)
             point_cloud.sample_points_above_z(z_threshold=0.15)
 
             points = np.asarray(point_cloud.filtered_point_cloud.points)
@@ -124,7 +124,7 @@ for z in np.arange(0.0, 0.6, 0.1):
             
             #input("Press enter to move to change belly position")
             # Save the NumPy array to a file
-            np.savetxt("data/manipulability_values_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt", np.array(manipulability_values))
-            np.savetxt("data/success_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt", np.array(success_list))
-            np.savetxt("data/collision_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt", np.array(collision_list))
+            np.savetxt("data_UR5/manipulability_values_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt", np.array(manipulability_values))
+            np.savetxt("data_UR5/success_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt", np.array(success_list))
+            np.savetxt("data_UR5/collision_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt", np.array(collision_list))
             # env.reset()

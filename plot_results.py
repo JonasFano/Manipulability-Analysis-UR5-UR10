@@ -3,12 +3,12 @@ import matplotlib.pyplot as plt
 
 def plot_all_data():
     for z in np.arange(0.0, 0.6, 0.1):
-        for y in np.arange(0.8, 1, 0.1):
-            for x in np.arange(-0.2, 0.3, 0.1):
+        for y in np.arange(0.7, 0.9, 0.1):
+            for x in np.arange(-0.3, 0.4, 0.1):
                 # Load the data from the text files
-                manipulability_values = np.loadtxt("data/manipulability_values_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt")
-                success_list = np.loadtxt("data/success_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt")
-                collision_list = np.loadtxt("data/collision_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt")
+                manipulability_values = np.loadtxt("data_UR10/manipulability_values_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt")
+                success_list = np.loadtxt("data_UR10/success_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt")
+                collision_list = np.loadtxt("data_UR10/collision_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt")
 
                 # Plot manipulability values
                 plt.figure(figsize=(10, 5))
@@ -31,13 +31,13 @@ def plot_all_data():
                 plt.show()
 
 def plot_filtered_data():
-    for z in np.arange(0.0, 0.6, 0.1):
-        for y in np.arange(0.8, 1, 0.1):
+    for z in np.arange(0.0, 0.5, 0.1):
+        for y in np.arange(0.5, 0.8, 0.1):
             for x in np.arange(-0.2, 0.3, 0.1):
                 # Load the data from the text files
-                manipulability_values = np.loadtxt("data/manipulability_values_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt")
-                success_list = np.loadtxt("data/success_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt")
-                collision_list = np.loadtxt("data/collision_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt")
+                manipulability_values = np.loadtxt("data_UR10/manipulability_values_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt")
+                success_list = np.loadtxt("data_UR10/success_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt")
+                collision_list = np.loadtxt("data_UR10/collision_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt")
 
                 # Check if there are no 0 values in success_list or no 1 values in collision_list
                 if (success_list != 0).all() and (collision_list != 1).all():
@@ -63,4 +63,5 @@ def plot_filtered_data():
 
 
 if __name__ == "__main__":
-    plot_all_data()
+    # plot_all_data()
+    plot_filtered_data()
