@@ -9,7 +9,8 @@ from swift import Swift
 
 def home_pos(robot):
     # Move to some initial joint position
-    home_q = np.deg2rad([-60, -80, -100, -90, 90, 0])
+    # home_q = np.deg2rad([-60, -80, -100, -90, 90, 0])
+    home_q = np.deg2rad([-60, -120, -110, -40, 90, 0])
     robot.q = home_q
 
     env.step()
@@ -48,10 +49,19 @@ for y in np.arange(0.8, 1, 0.1):
 
         point_cloud = Point_cloud_Manipulability()
         point_cloud.load_from_object_file(stl_file_name="Belly_new.stl", obj_translate=[x, y, 0.0], scale_factor=1, num_points=500)
-        point_cloud.sample_points_above_z(z_threshold=0.1)
+        point_cloud.sample_points_above_z(z_threshold=0.15)
 
-        points = np.asarray(point_cloud.filtered_point_cloud.points)[:]
-        normals = np.asarray(point_cloud.filtered_point_cloud.normals)[:]
+        points = np.asarray(point_cloud.filtered_point_cloud.points)
+        normals = np.asarray(point_cloud.filtered_point_cloud.normals)
+
+        n = len(points)
+        perm = np.random.permutation(n)
+
+        points_shuffeled = points[perm]
+        normals_shuffeled = normals[perm]
+
+        points = points_shuffeled[:100]
+        normals = normals_shuffeled[:100]
 
         for i in range(len(points)):
             print("Position: ", points[i])
