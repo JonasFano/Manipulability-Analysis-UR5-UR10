@@ -24,22 +24,22 @@ def home_pos(robot):
 # env = Swift()
 # env.launch()
 
-# Instantiate a UR5 robot
+# # Instantiate a UR5 robot
 # robot = rtb.models.URDF.UR5()
-robot = rtb.models.URDF.UR10()
-T_robot = SE3.Tz(0.3)
-robot.base = T_robot * robot.base # Transform robot base position
+# # robot = rtb.models.URDF.UR10()
+# T_robot = SE3.Tz(0.3)
+# robot.base = T_robot * robot.base # Transform robot base position
 
 # input("Press enter to start robot manipulability check")
 
 
-for z in tqdm(np.arange(0.0, 0.5, 0.1), desc="Z Loop", leave = False):
-    robot = rtb.models.URDF.UR10()
+for z in tqdm(np.arange(0.15, 0.4, 0.05), desc="Z Loop", leave = False):
+    robot = rtb.models.URDF.UR5()
     T_robot = SE3.Tz(z)
     robot.base = T_robot * robot.base # Transform robot base position
 
-    for y in tqdm(np.arange(0.5, 0.8, 0.1), desc="Y Loop", leave = False):
-        for x in tqdm(np.arange(-0.2, 0.3, 0.1), desc="X Loop", leave = False):
+    for y in tqdm(np.arange(0.4, 0.55, 0.05), desc="Y Loop", leave = False):
+        for x in tqdm(np.arange(-0.1, 0.2, 0.05), desc="X Loop", leave = False):
             # Create an empty list to store manipulability values
             manipulability_values = []
             success_list = []
@@ -124,7 +124,7 @@ for z in tqdm(np.arange(0.0, 0.5, 0.1), desc="Z Loop", leave = False):
             
             #input("Press enter to move to change belly position")
             # Save the NumPy array to a file
-            np.savetxt("data_UR5/manipulability_values_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt", np.array(manipulability_values))
-            np.savetxt("data_UR5/success_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt", np.array(success_list))
-            np.savetxt("data_UR5/collision_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt", np.array(collision_list))
+            # np.savetxt("data_UR5/manipulability_values_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt", np.array(manipulability_values))
+            # np.savetxt("data_UR5/success_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt", np.array(success_list))
+            # np.savetxt("data_UR5/collision_list_" + str(x) + "_" + str(y) + "_" + str(z) + ".txt", np.array(collision_list))
             # env.reset()
