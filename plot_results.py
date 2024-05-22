@@ -160,9 +160,38 @@ def plot_filtered_data_UR10_few():
     print(c)
 
 
+def plot_result_UR10():
+    # Load the data from the text files
+    manipulability_values = np.loadtxt("data_UR10/manipulability_values_-0.3_0.7000000000000002_0.49999999999999994.txt")
+    success_list = np.loadtxt("data_UR10/success_list_-0.3_0.7000000000000002_0.49999999999999994.txt")
+    collision_list = np.loadtxt("data_UR10/collision_list_-0.3_0.7000000000000002_0.49999999999999994.txt")
+
+    # Plot manipulability values
+    plt.figure(figsize=(10, 5))
+    plt.subplot(1, 2, 1)
+    plt.plot(manipulability_values)
+    plt.title("Manipulability Values")
+    plt.xlabel("Point Index")
+    plt.ylabel("Manipulability")
+
+    # Plot success list
+    plt.subplot(1, 2, 2)
+    plt.plot(success_list, label="Success")
+    plt.plot(collision_list, label="Collision")
+    plt.title("Success and Collision")
+    plt.xlabel("Point Index")
+    plt.ylabel("Boolean: True or False")
+    plt.legend()
+
+    plt.tight_layout()
+    plt.show()
+
+
+
 if __name__ == "__main__":
     # plot_all_data_UR5()
     # plot_all_data_UR10()
     # plot_filtered_data_UR10()
     # plot_filtered_data_UR5()
-    plot_filtered_data_UR10_few()
+    # plot_filtered_data_UR10_few()
+    plot_result_UR10()
